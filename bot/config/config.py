@@ -9,9 +9,8 @@ class Settings(BaseSettings):
     USE_PROXY_FROM_FILE: bool = False
 
     MIN_AVAILABLE_ENERGY: int = 10
-    SLEEP_BY_MIN_ENERGY: int = 200
     RANDOM_TAPS_COUNT: list[int] = [5, 9]
-    SLEEP_BETWEEN_TAP: list[int] = [10, 15]
+    SLEEP_BETWEEN_TAP: list[int] = [7, 15]
     AUTO_UPGRADE: bool = True
 
 
