@@ -1,5 +1,6 @@
 bot_info = {
-    'origin': 'https://www.yescoin.gold',
-    'peer': 'theYescoin_bot',
-    'short_name': 'Yescoin',
+    'origin': 'https://sexyzbot.pxlvrs.io',
+    'peer': 'pixelversexyzbot',
+    'short_name': 'Pixelversexyzbot',
+    'api': 'https://api-clicker.pixelverse.xyz/api'
 }
