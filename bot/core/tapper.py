@@ -138,10 +138,10 @@ class Tapper:
                             f"{self.session_name} | Successful tapped +{points_tapped} | Balance: ~{balance} | Energy: {profile_data['pet']['energy']}")
                         await asyncio.sleep(1)
                     else:
-                        energy_per_second = math.floor(profile_data['pet']['energyPerSecond'])
+                        energy_per_second = profile_data['pet']['energyPerSecond']
                         max_energy = profile_data['pet']['maxEnergy']
                         current_energy = profile_data['pet']['energy']
-                        sleep_time = (max_energy - current_energy) / energy_per_second
+                        sleep_time = math.ceil((max_energy - current_energy) / energy_per_second)
 
                         logger.info(f"{self.session_name} | Reached minimum energy, sleep {sleep_time}s")
                         await asyncio.sleep(sleep_time)
@@ -150,7 +150,7 @@ class Tapper:
                         balance = math.floor(profile_data["clicksCount"])
                         upgrade_price = math.floor(profile_data["pet"]["levelUpPrice"])
                         if balance >= upgrade_price:
-                            level_data = await self.level_up(profile_data["clicksCount"]['id'])
+                            level_data = await self.level_up(profile_data["pet"]['id'])
                             logger.info(f"{self.session_name} | Successfully upgraded to {level_data['level']} lvl")
                             await asyncio.sleep(1)
 
