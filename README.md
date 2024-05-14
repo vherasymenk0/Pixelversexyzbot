@@ -1,16 +1,9 @@
-| Features                            |
-|-------------------------------------|
-| *Multithreading*                    |
-| *Binding a proxy to a session*      |
-| *Random unique mobile user agent*   |
-| *Support pyrogram .session*         |
-
----
-| Functionality      |
-|--------------------|
-| *Auto click*       |
-| *Auto upgrade pet* |
-
+| Features                            | Functionality        |   
+|-------------------------------------|----------------------|
+| **Multithreading**                  | **Auto click**       |
+| **Binding a proxy to a session**    | **Auto upgrade pet** |
+| **Random unique mobile user agent** |                      |
+| **Support pyrogram .session**       |                      |
 ---
 ## Settings via .env file
 | Property                 | Description                                                                           |
