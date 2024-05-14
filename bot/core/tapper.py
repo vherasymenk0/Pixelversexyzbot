@@ -143,8 +143,9 @@ class Tapper:
                         current_energy = profile_data['pet']['energy']
                         sleep_time = math.ceil((max_energy - current_energy) / energy_per_second)
 
-                        logger.info(f"{self.session_name} | Reached minimum energy, sleep {sleep_time}s")
+                        logger.info(f"{self.session_name} | Reached minimum energy, sleep {sleep_time}s for full energy recovery ")
                         await asyncio.sleep(sleep_time)
+                        continue
 
                     if settings.AUTO_UPGRADE:
                         balance = math.floor(profile_data["clicksCount"])
@@ -153,6 +154,7 @@ class Tapper:
                             level_data = await self.level_up(profile_data["pet"]['id'])
                             logger.info(f"{self.session_name} | Successfully upgraded to {level_data['level']} lvl")
                             await asyncio.sleep(1)
+                            continue
 
                 except InvalidSession as error:
                     raise error
@@ -164,7 +166,7 @@ class Tapper:
                 else:
                     sleep_between_clicks = randint(a=settings.SLEEP_BETWEEN_TAP[0], b=settings.SLEEP_BETWEEN_TAP[1])
 
-                    logger.info(f"Sleep between clicks {sleep_between_clicks}s")
+                    logger.info(f"Sleep between taps {sleep_between_clicks}s")
                     await asyncio.sleep(delay=sleep_between_clicks)
 
 
