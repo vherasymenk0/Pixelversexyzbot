@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     MIN_AVAILABLE_ENERGY: int = 10
     RANDOM_TAPS_COUNT: list[int] = [5, 9]
-    SLEEP_BETWEEN_TAP: list[int] = [7, 15]
+    SLEEP_BETWEEN_TAP: list[int] = [2, 5]
     AUTO_UPGRADE: bool = True
 
 
