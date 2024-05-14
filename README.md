@@ -16,6 +16,7 @@
 | Property                 | Description                                                                           |
 |--------------------------|---------------------------------------------------------------------------------------|
 | **API_ID / API_HASH**    | Platform data from which to launch a Telegram session (stock - Android)               |
+| **SECRET_KEY**           | Key for creating a secret hash                                                        |
 | **USE_PROXY_FROM_FILE**  | Whether to use proxy from the `bot/config/proxies.txt` file (True / False)            |
 | **MIN_AVAILABLE_ENERGY** | Minimum amount of available energy, upon reaching which there will be a delay (eg 10) |
 | **RANDOM_CLICKS_COUNT**  | Random number of taps (eg 5,9)                                                        |

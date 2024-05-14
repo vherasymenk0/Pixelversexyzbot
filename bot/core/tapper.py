@@ -1,14 +1,12 @@
 import asyncio
 from random import randint
-from urllib.parse import unquote
-
+import hashlib
+import hmac
 import aiohttp
 from aiohttp_proxy import ProxyConnector
 from better_proxy import Proxy
 from pyrogram import Client
 from pyrogram.errors import Unauthorized, UserDeactivated, AuthKeyUnregistered
-from pyrogram.raw.functions.messages import RequestAppWebView
-from pyrogram.raw.types import InputBotAppShortName
 import math
 from bot.config import settings
 from bot.utils import logger
@@ -16,7 +14,7 @@ from bot.exceptions import InvalidSession
 from .headers import headers
 from .bot_info import bot_info
 
-api_url = 'https://api-clicker.pixelverse.xyz/api'
+api_url = bot_info['api']
 
 
 class Tapper:
@@ -25,7 +23,7 @@ class Tapper:
         self.tg_client = tg_client
         self.http_client = None
 
-    async def get_tg_web_data(self, proxy: str | None) -> str:
+    async def get_tg_id(self, proxy: str | None) -> str:
         if proxy:
             proxy = Proxy.from_str(proxy)
             proxy_dict = dict(
@@ -41,33 +39,16 @@ class Tapper:
         self.tg_client.proxy = proxy_dict
 
         try:
-            with_tg = True
-
             if not self.tg_client.is_connected:
-                with_tg = False
                 try:
                     await self.tg_client.connect()
                 except (Unauthorized, UserDeactivated, AuthKeyUnregistered):
                     raise InvalidSession(self.session_name)
 
-            bot = await self.tg_client.resolve_peer(bot_info['peer'])
-            app = InputBotAppShortName(bot_id=bot, short_name=bot_info['short_name'])
-            web_view = await self.tg_client.invoke(RequestAppWebView(
-                peer=bot,
-                app=app,
-                platform='android',
-                write_allowed=True
-            ))
+            me = await self.tg_client.get_me()
+            await self.tg_client.disconnect()
 
-            auth_url = web_view.url
-            tg_web_data = unquote(
-                string=unquote(
-                    string=auth_url.split('tgWebAppData=', maxsplit=1)[1].split('&tgWebAppVersion', maxsplit=1)[0]))
-
-            if with_tg is False:
-                await self.tg_client.disconnect()
-
-            return tg_web_data
+            return str(me.id)
 
         except InvalidSession as error:
             raise error
@@ -114,11 +95,24 @@ class Tapper:
         except Exception as error:
             logger.error(f"{self.session_name} | Proxy: {proxy} | Error: {error}")
 
+    async def create_secret_hash(self, my_id: str) -> str:
+        try:
+            secret_hash = hmac.new(settings.SECRET_KEY.encode("utf-8"), my_id.encode("utf-8"), hashlib.sha256).hexdigest()
+
+            return secret_hash
+        except Exception as error:
+            logger.error(f"{self.session_name} | Unknown error while creating secret hash {error}")
+
     async def run(self, proxy: str | None, agent) -> None:
         proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
+        my_id = await self.get_tg_id(proxy)
+        secret = await self.create_secret_hash(my_id)
+
         clientHeaders = {
             **headers,
-            **agent
+            **agent,
+            'Tg-Id': my_id,
+            'Secret': secret
         }
 
         async with aiohttp.ClientSession(headers=clientHeaders, connector=proxy_conn) as http_client:

@@ -6,6 +6,7 @@ class Settings(BaseSettings):
 
     API_ID: int
     API_HASH: str
+    SECRET_KEY: str
     USE_PROXY_FROM_FILE: bool = False
 
     MIN_AVAILABLE_ENERGY: int = 10
